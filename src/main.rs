@@ -11,6 +11,7 @@ enum ResourceType {
 }
 struct Block {
     id: String,
+    seq: u32,
     length: f32,
     resources: Vec<Resource>,
 }
@@ -27,20 +28,24 @@ fn main() {
     };
     let block1 = Block {
         id: "QUOTE".to_string(),
+        seq: 1,
         length: 5.5,
         resources: Vec::new(),
     };
     let block2 = Block {
-        id: "QUOTE".to_string(),
+        id: "REVIEW".to_string(),
+        seq: 2,
         length: 5.5,
         resources: Vec::new(),
     };
     let block3 = Block {
-        id: "QUOTE".to_string(),
+        id: "BUILD".to_string(),
+        seq: 3,
         length: 5.5,
         resources: Vec::new(),
     };
-    let local: DateTime<Local> = Local::now();
+
+    let now: DateTime<Local> = Local::now();
 
     println!("Hello, world!");
 }
