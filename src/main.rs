@@ -1,4 +1,4 @@
-use chrono::{DateTime, Duration, Local, NaiveDate, NaiveTime};
+use chrono::{DateTime, Days, Duration, Local, NaiveDate, NaiveTime};
 use std::io::stdin;
 
 #[allow(dead_code)]
@@ -56,28 +56,41 @@ struct Project {
     description: String,
     blocks: Vec<Block>,
 }
+
 fn main() {
-    let vert = Resource {
+    let mut vert = Resource {
         id: "VERT".to_string(),
         resource_type: ResourceType::Machine,
         capacity: Vec::new(),
     };
+    let now: DateTime<Local> = Local::now();
+    let end_date = now.checked_add_days(Days::new(5)).unwrap();
+    let mut iter_date = now;
+    while iter_date < end_date {
+        let mut availability_block = AvailabilityBlock {
+            start: NaiveTime::from_hms(8, 0, 0),
+            end: NaiveTime::from_hms(4, 30, 0),
+        };
+        let mut capacity = Capacity {
+            date: iter_date.date().naive_local(),
+            availability: Vec::new(),
+        };
+        capacity.availability.push(availability_block);
+        vert.capacity.push(capacity);
+        iter_date = iter_date + Duration::days(1);
+    }
     let op1 = Operation {
         code: "VERT".to_string(),
         resource: vert,
         length: 50.0,
         blocks: Vec::new(),
     };
-    while op1.length > 0.0 {
-        unimplemented!();
-        // Find the soonest open capacity at the resource group
-    }
+    // For the operation, find the resource assignment and find the soonest availability.
+
     println!("Enter a start time for the Verts");
 
     let mut start_time = String::from("");
     stdin()
         .read_line(&mut start_time)
         .expect("Failed to read start time");
-
-    let now: DateTime<Local> = Local::now();
 }
