@@ -22,7 +22,7 @@ impl Job {
         operations.into_iter().for_each(|op| self.ops.push(op))
     }
 
-    fn schedule_job(&mut self) {
+    pub fn schedule_job(&mut self) {
         self.ops.iter().for_each(|op| op.schedule_op())
     }
 
@@ -41,12 +41,12 @@ impl Job {
         self.get_latest_op_seq() + 1
     }
 
-    pub fn add_operation(&mut self, code: String, resource: Resource, length: i64) {
+    pub fn add_operation(&mut self, code: String, resource: Resource, minutes: i64) {
         // Get the next sequence number for the operation
         let next_sequence = self.get_next_seq();
 
         // Create the operation
-        let operation = Operation::create(next_sequence, code, resource, length);
+        let operation = Operation::create(next_sequence, code, resource, minutes);
 
         // Push the operation into the job
         self.ops.push(operation)

@@ -1,29 +1,32 @@
 use crate::capacity::AvailabilityBlock;
-use chrono::{DateTime, Days, Duration, Local, NaiveTime};
+use chrono::{DateTime, Days, Duration, Local, NaiveTime, Utc};
 
 use crate::capacity::Capacity;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum ResourceType {
     Person,
     Machine,
     Pallet,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Resource {
     id: String,
     resource_type: ResourceType,
-    capacity: Vec<Capacity>,
+    pub capacity: Vec<Capacity>,
 }
 
 impl Resource {
-    fn new(id: String, resource_type: ResourceType) -> Resource {
-        Resource {
+    pub fn create(id: String, resource_type: ResourceType, capacity_days: Option<u64>) -> Resource {
+        let mut res = Resource {
             id,
             resource_type,
             capacity: Vec::new(),
-        }
+        };
+
+        res.calculate_capacity(capacity_days.unwrap_or(2));
+        res
     }
 
     fn calculate_capacity(&mut self, days: u64) {
@@ -47,7 +50,8 @@ impl Resource {
 
     fn get_soonest_capacity(&self) -> Option<&AvailabilityBlock> {
         // Just getting the first capacity day for now
-        let soonest_availability = self.capacity.get(0);
+        let today = Utc::today().naive_utc();
+        let soonest_availability = self.capacity.iter().find(|r| r.date == today);
         let first_avail = soonest_availability.unwrap().get_first_availability();
         first_avail
     }

@@ -1,12 +1,12 @@
 use chrono::{NaiveDate, NaiveTime};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Capacity {
     pub date: NaiveDate,
     pub availability: Vec<AvailabilityBlock>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct AvailabilityBlock {
     pub start: NaiveTime,
     pub end: NaiveTime,

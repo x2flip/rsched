@@ -8,12 +8,21 @@ mod resource;
 
 fn main() {
     // Create the job
-    let job_num = "TEST01".to_string();
-    let need_date = NaiveDate::from_ymd_opt(2024, 2, 29).unwrap();
-    let job = job::Job::create(job_num, need_date);
+    let mut job = job::Job::create(
+        "TEST01".to_string(),
+        NaiveDate::from_ymd_opt(2024, 2, 29).unwrap(),
+    );
 
-    println!("{:?}", job);
+    // Create Resource
+    let vert01 = resource::Resource::create(
+        "VERT01".to_string(),
+        resource::ResourceType::Machine,
+        Some(1),
+    );
 
     // Add an operation
-    job.add_operation("VERT".to_string(), resource, length)
+    job.add_operation("VERT".to_string(), vert01, 60);
+
+    job.schedule_job();
+    println!("{:#?}", job);
 }
